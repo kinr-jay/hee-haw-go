@@ -7,7 +7,6 @@ import (
 	"github.com/kinr-jay/hee-haw-go/src/models"
 
 	"github.com/labstack/echo/v4"
-	_ "github.com/lib/pq"
 )
 
 var users []models.User

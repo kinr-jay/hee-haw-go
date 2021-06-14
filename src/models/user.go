@@ -12,6 +12,7 @@ type UserLocation struct {
 }
 
 type User struct {
+	gorm.Model
 	FirstName		string
 	LastName		string
 	Email				string
