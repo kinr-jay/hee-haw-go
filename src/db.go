@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"os"
@@ -22,19 +23,29 @@ func CreateDB() {
   }
 
 
-	HOST := os.Getenv("HOST")
-	PGUSER := os.Getenv("PGUSER")
-	PGPASSWORD := os.Getenv("PGPASSWORD")
-	DBNAME := os.Getenv("DBNAME")
-	PORT := os.Getenv("PORT")
-	SSLMODE := os.Getenv("SSLMODE")
+	// HOST := os.Getenv("HOST")
+	// PGUSER := os.Getenv("PGUSER")
+	// PGPASSWORD := os.Getenv("PGPASSWORD")
+	// DBNAME := os.Getenv("DBNAME")
+	// PORT := os.Getenv("PORT")
+	// SSLMODE := os.Getenv("SSLMODE")
 
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s", HOST, PGUSER, PGPASSWORD, DBNAME, PORT, SSLMODE)
-	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
-  if err != nil {
+	// dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s", HOST, PGUSER, PGPASSWORD, DBNAME, PORT, SSLMODE)
+	// DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+	sqlDB, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
     log.Fatal(err)
   } else {
 		fmt.Println("Connected to the DB")
+	}
+	DB, err = gorm.Open(postgres.New(postgres.Config{
+		Conn: sqlDB,
+	}))
+  if err != nil {
+    log.Fatal(err)
+  } else {
+		fmt.Println("Converted DB connection to GORM")
 	}
 
 	DB.AutoMigrate(&models.User{}, &models.Trip{})

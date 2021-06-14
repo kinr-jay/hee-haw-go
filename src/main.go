@@ -23,16 +23,13 @@ func main() {
 	})
 
 	e.GET("/test", func(c echo.Context) error {
-		user := models.User {
+		user := models.User{
 			FirstName: "Connor",
-			LastName: "Jacobs",
-			Email: "cjacob22@gmail.com",
-			Phone: "314-540-4529",
-			Location: models.UserLocation{
-				City: "Denver",
-				State: "CO",
-				Country: "US",
-			},
+			LastName:  "Jacobs",
+			Email:     "cjacob22@gmail.com",
+			Phone:     "314-540-4529",
+			Location:  models.UserLocation{City: "Denver", State: "CO", Country: "US"},
+			Trips:     []*models.Trip{},
 		}
 		fmt.Println(&user)
 
