@@ -6,17 +6,17 @@ import (
 
 type UserLocation struct {
 	gorm.Model
-	City 				string
-	State				string
-	Country			string
+	City 				string			`json:"city"`
+	State				string			`json:"state"`
+	Country			string			`json:"country"`
 }
 
 type User struct {
 	gorm.Model
-	FirstName		string
-	LastName		string
-	Email				string
-	Phone				string
-	Location 		UserLocation `gorm:"embedded"`
+	FirstName		string			`json:"firstName"`
+	LastName		string			`json:"lastName"`
+	Email				string			`json:"email"`
+	Phone				string			`json:"password"`
+	Location 		UserLocation `gorm:"embedded" json:"location"`
 	Trips				[]*Trip `gorm:"many2many:users_trips;"`
 }
