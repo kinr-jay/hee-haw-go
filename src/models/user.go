@@ -13,10 +13,11 @@ type UserLocation struct {
 
 type User struct {
 	gorm.Model
-	FirstName		string			`json:"firstName"`
-	LastName		string			`json:"lastName"`
-	Email				string			`json:"email"`
-	Phone				string			`json:"password"`
-	Location 		UserLocation `gorm:"embedded" json:"location"`
-	Trips				[]*Trip `gorm:"many2many:users_trips;"`
+	FirstName		string				`json:"firstName"`
+	LastName		string				`json:"lastName"`
+	Email				string				`json:"email"`
+	Password		string				`json:"password"`
+	Phone				string				`json:"phone"`
+	Location 		UserLocation  `gorm:"embedded" json:"location"`
+	Trips				[]*Trip 			`gorm:"many2many:users_trips;"`
 }
