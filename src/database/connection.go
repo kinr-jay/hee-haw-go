@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -16,9 +17,9 @@ var DB *gorm.DB
 var err error
 
 func CreateDB() {
-  // if err := godotenv.Load(); err != nil {
-  //   log.Fatal("Error loading .env file")
-  // }
+  if err := godotenv.Load(); err != nil {
+    log.Fatal("Error loading .env file")
+  }
 
 	sqlDB, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {

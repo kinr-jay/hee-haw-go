@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/kinr-jay/hee-haw-go/src/database"
 	"github.com/kinr-jay/hee-haw-go/src/handlers"
 
@@ -12,9 +14,9 @@ import (
 )
 
 func main() {
-	// if err := godotenv.Load(); err != nil {
-  //   log.Fatal("Error loading .env file")
-  // }
+	if err := godotenv.Load(); err != nil {
+    log.Fatal("Error loading .env file")
+  }
 	
 	database.CreateDB()
 	fmt.Println(database.DB)
