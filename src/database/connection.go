@@ -17,10 +17,14 @@ var DB *gorm.DB
 var err error
 
 func CreateDB() {
-  if err := godotenv.Load(); err != nil {
-    log.Fatal("Error loading .env file")
-  }
+  //////// Load .env file if in Development environment ///////////
+	if os.Getenv("PRODUCTION") == "false" {
+		if err := godotenv.Load(); err != nil {
+			log.Fatal("Error loading .env file")
+		}
+	}
 
+	//////// Connect to Heroku's Postgres Database //////////
 	sqlDB, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
     log.Fatal(err)
@@ -36,5 +40,6 @@ func CreateDB() {
 		fmt.Println("Converted DB connection to GORM")
 	}
 	
+	//////// Auto-Migrate Tables to Database ///////////
 	// DB.AutoMigrate(&models.User{}, &models.Trip{})
 }
