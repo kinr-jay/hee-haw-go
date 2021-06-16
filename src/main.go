@@ -60,7 +60,7 @@ func main() {
 	tripGroup.PUT("/:tripId", handlers.UpdateTrip)
 	tripGroup.DELETE("/:tripId", handlers.DeleteTrip)
 	tripGroup.PUT("/:tripId/add/:userId", handlers.AddTeamMember)
-	// tripGroup.PUT("/:tripId/remove/:userId", handlers.RemoveTeamMember)
+	tripGroup.PUT("/:tripId/remove/:userId", handlers.RemoveTeamMember)
 
 	/////// Start Echo Server //////////
 	PORT := ":" + os.Getenv("PORT")
