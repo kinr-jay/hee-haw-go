@@ -16,7 +16,7 @@ import (
 )
 
 ///////// JWT Functions ////////////////////
-func CreateJWTToken(email string, userId uint) (string, error) {
+func CreateJWTToken(email string, userId uint64) (string, error) {
 	
 	rawToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email": email,
@@ -46,7 +46,7 @@ func Login(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, "There is no account registered under that email.")
 	}
 
-	err := bcrypt.CompareHashAndPassword([]byte(login.Password), []byte(user.Password))
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(login.Password))
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, "Incorrect password.")
 	}

@@ -49,14 +49,17 @@ func main() {
 	}))
 
 	////// Users Routing /////////
-	userGroup.GET("/", handlers.FindAllUsers)
-	userGroup.POST("/", handlers.CreateUser)
+	userGroup.GET("", handlers.FindAllUsers)
+	userGroup.POST("", handlers.CreateUser)
+	userGroup.GET("/:userId", handlers.FindAccount)
 
 	////// Trips Routing /////////
 	tripGroup.GET("", handlers.FindAllTrips)
 	tripGroup.POST("", handlers.CreateTrip)
 	tripGroup.PUT("/:tripId", handlers.UpdateTrip)
 	tripGroup.DELETE("/:tripId", handlers.DeleteTrip)
+	tripGroup.PUT("/:tripId/add/:userId", handlers.AddTeamMember)
+	// tripGroup.PUT("/:tripId/remove/:userId", handlers.RemoveTeamMember)
 
 	/////// Start Echo Server //////////
 	PORT := ":" + os.Getenv("PORT")

@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/kinr-jay/hee-haw-go/src/models"
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -37,5 +36,5 @@ func CreateDB() {
 		fmt.Println("Converted DB connection to GORM")
 	}
 	
-	DB.AutoMigrate(&models.User{}, &models.Trip{})
+	// DB.AutoMigrate(&models.User{}, &models.Trip{})
 }

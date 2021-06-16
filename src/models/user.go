@@ -1,23 +1,27 @@
 package models
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
 type UserLocation struct {
-	gorm.Model
-	City 				string			`json:"city"`
-	State				string			`json:"state"`
-	Country			string			`json:"country"`
+	City 				string			`json:"city,omitempty"`
+	State				string			`json:"state,omitempty"`
+	Country			string			`json:"country,omitempty"`
 }
 
 type User struct {
-	gorm.Model
-	FirstName		string				`json:"firstName"`
-	LastName		string				`json:"lastName"`
-	Email				string				`json:"email"`
-	Password		string				`json:"password"`
-	Phone				string				`json:"phone"`
-	Location 		UserLocation  `gorm:"embedded" json:"location"`
-	Trips				[]*Trip 			`gorm:"many2many:users_trips;"`
+	ID					uint64					`gorm:"primaryKey" json:"userId"`
+	CreatedAt		time.Time				`json:"-"`
+	UpdatedAt		time.Time				`json:"-"`
+	DeletedAt		gorm.DeletedAt	`gorm:"index,omitempty"`
+	FirstName		string					`json:"firstName"`
+	LastName		string					`json:"lastName"`
+	Email				string					`json:"email,omitempty"`
+	Password		string					`json:"-"`
+	Phone				string					`json:"phone,omitempty"`
+	Location 		*UserLocation  	`gorm:"embedded" json:"location,omitempty"`
+	Trips				[]*Trip 				`gorm:"many2many:users_trips;" json:"trips"`
 }
