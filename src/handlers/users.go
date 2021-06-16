@@ -49,7 +49,7 @@ func FindAllUsers(c echo.Context) error {
 }
 
 // Find Individual User Account by ID
-func FindAccount(c echo.Context) error {
+func FindUser(c echo.Context) error {
 	user := new(models.User)
 	userId := c.Param("userId")
 	result := database.DB.Preload("Trips").Select("id", "first_name", "last_name", "email").First(&user, userId)
