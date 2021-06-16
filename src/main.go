@@ -50,8 +50,9 @@ func main() {
 
 	////// Users Routing /////////
 	userGroup.GET("", handlers.FindAllUsers)
-	userGroup.POST("", handlers.CreateUser)
-	userGroup.GET("/:userId", handlers.FindAccount)
+	userGroup.GET("/:userId", handlers.FindUser)
+	userGroup.PUT("/:userId", handlers.UpdateUser)
+	userGroup.DELETE("/:userId", handlers.DeleteUser)
 
 	////// Trips Routing /////////
 	tripGroup.GET("", handlers.FindAllTrips)
