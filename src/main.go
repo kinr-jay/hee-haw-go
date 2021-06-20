@@ -31,7 +31,7 @@ func main() {
 	})
 
 	////// base url paths //////////
-	e.GET("/login", handlers.Login)
+	e.POST("/login", handlers.Login)
 	e.POST("/signup", handlers.CreateUser)
 
 	////// Echo Routing Groups /////////
