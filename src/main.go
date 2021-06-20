@@ -24,6 +24,7 @@ func main() {
 	//////// Create connection to database, instantiate echo //////////
 	database.CreateDB()
 	e := echo.New()
+	e.Use(middleware.CORS())
 	
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Yeeeee-haw!")
