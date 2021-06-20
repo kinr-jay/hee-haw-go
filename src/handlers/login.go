@@ -57,8 +57,9 @@ func Login(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "Unable to generate JWT token.")
 	}
 
-	return c.JSON(http.StatusOK, map[string]string{
+	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Login successful.",
+		"userId": user.ID,
 		"token": token,
 	})
 }
