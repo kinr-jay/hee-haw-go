@@ -32,6 +32,7 @@ func main() {
 
 	////// base url paths //////////
 	e.POST("/login", handlers.Login)
+	// e.POST("/check-auth", handlers.CheckJWT)
 	e.POST("/signup", handlers.CreateUser)
 
 	////// Echo Routing Groups /////////
@@ -58,6 +59,7 @@ func main() {
 	////// Trips Routing /////////
 	tripGroup.GET("", handlers.FindAllTrips)
 	tripGroup.POST("", handlers.CreateTrip)
+	tripGroup.GET("/:tripId", handlers.FindTrip)
 	tripGroup.PUT("/:tripId", handlers.UpdateTrip)
 	tripGroup.DELETE("/:tripId", handlers.DeleteTrip)
 	tripGroup.PUT("/:tripId/add/:userId", handlers.AddTeamMember)

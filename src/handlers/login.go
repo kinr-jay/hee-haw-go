@@ -15,6 +15,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type login struct {
+	Email				string 		`json:"email"`
+	Password		string		`json:"password"`
+}
+
 ///////// JWT Functions ////////////////////
 func CreateJWTToken(email string, userId uint64) (string, error) {
 	
@@ -30,11 +35,6 @@ func CreateJWTToken(email string, userId uint64) (string, error) {
 	}
 
 	return tokenString, nil
-}
-
-type login struct {
-	Email				string 		`json:"email"`
-	Password		string		`json:"password"`
 }
 
 func Login(c echo.Context) error {
@@ -63,3 +63,8 @@ func Login(c echo.Context) error {
 		"token": token,
 	})
 }
+
+// Handler function for checking expiration of current token
+// func CheckJWT(c echo.Context) error {
+
+// }
