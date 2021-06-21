@@ -7,6 +7,7 @@ import (
 
 	"github.com/kinr-jay/hee-haw-go/src/database"
 	"github.com/kinr-jay/hee-haw-go/src/models"
+	"gorm.io/gorm"
 
 	"github.com/labstack/echo"
 	"golang.org/x/crypto/bcrypt"
@@ -52,7 +53,9 @@ func FindAllUsers(c echo.Context) error {
 func FindUser(c echo.Context) error {
 	user := new(models.User)
 	userId := c.Param("userId")
-	result := database.DB.Preload("Trips").Select("id", "first_name", "last_name", "email").First(&user, userId)
+	result := database.DB.Preload("Trips", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id", "title")
+	}).Select("id", "first_name", "last_name", "email", "phone").First(&user, userId)
 	if result.Error != nil {
 		log.Fatal(result.Error)
 		return c.JSON(http.StatusInternalServerError, "Could not find user account.")

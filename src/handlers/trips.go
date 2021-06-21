@@ -11,33 +11,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// func CreateTrip(c echo.Context) error {
-
-// 	trip := models.Trip{
-// 		Title: "Sample Trip",
-// 		Description: "Lorem ipsum dolor yippiekayay mf",
-// 		Image: "https://nothingisreal.net",
-// 		StartDate: "06/14/2021",
-// 		EndDate: "06/14/2021",
-// 		Area: "The backyard",
-// 		Regs: "Standard WA / NF regs, bear cannisters not required",
-// 		Muster: "The Ace Hardware Store on Colfax",
-// 		Distance: 5,
-// 		Elevation: 1500,
-// 		GroupSize: 10,
-// 		GearList: pq.StringArray([]string{"boots", "backpack", "tent"}),
-// 		Completed: false,
-// 		Report: "",
-// 		Team: []*models.User{},
-// 	}
-
-// 	result := database.DB.Create(&trip)
-// 	if result.Error != nil {
-// 		log.Fatal(result.Error)
-// 	}
-// 	return c.JSON(http.StatusOK, "Trip added successfully.")
-// }
-
 // Find All Trips
 func FindAllTrips(c echo.Context) error {
 	var trips []models.Trip
@@ -51,6 +24,20 @@ func FindAllTrips(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Unable to locate trips.")
 	}
 	return c.JSON(http.StatusOK, trips)
+}
+
+// Find Single Trip
+func FindTrip(c echo.Context) error {
+	trip := new(models.Trip)
+	tripId := c.Param("tripId")
+	result := database.DB.Preload("Team", func(db *gorm.DB) *gorm.DB {
+		return db.Select("ID", "FirstName", "LastName")
+	}).First(&trip, tripId)
+	if result.Error != nil {
+		log.Fatal(result.Error)
+		return c.JSON(http.StatusInternalServerError, "Could not find trip details.")
+	}
+	return c.JSON(http.StatusOK, trip)
 }
 
 // Create a New Trip
