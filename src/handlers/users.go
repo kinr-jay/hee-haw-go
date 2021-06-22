@@ -36,8 +36,9 @@ func CreateUser(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "Unable to login.")
 	}
 
-	return c.JSON(http.StatusOK, map[string]string{
+	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Login successful.",
+		"userId": user.ID,
 		"token": token,
 	})
 }
@@ -92,3 +93,5 @@ func DeleteUser(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, "Account deleted successfully.")
 }
+
+// Add password for existing account
