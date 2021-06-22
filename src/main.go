@@ -55,6 +55,7 @@ func main() {
 	userGroup.GET("/:userId", handlers.FindUser)
 	userGroup.PUT("/:userId", handlers.UpdateUser)
 	userGroup.DELETE("/:userId", handlers.DeleteUser)
+	// userGroup.PUT("/add-password", handlers.AddPassword)
 
 	////// Trips Routing /////////
 	tripGroup.GET("", handlers.FindAllTrips)
