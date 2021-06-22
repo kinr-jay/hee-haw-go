@@ -21,7 +21,8 @@ type login struct {
 }
 
 ///////// JWT Functions ////////////////////
-func CreateJWTToken(email string, userId uint64) (string, error) {
+//////// Create JWT
+func CreateJWT(email string, userId uint64) (string, error) {
 	
 	rawToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email": email,
@@ -37,6 +38,7 @@ func CreateJWTToken(email string, userId uint64) (string, error) {
 	return tokenString, nil
 }
 
+// User Login Function
 func Login(c echo.Context) error {
 	user := new(models.User)
 	login := new(login)
@@ -51,7 +53,7 @@ func Login(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, "Incorrect password.")
 	}
 
-	token, err2 := CreateJWTToken(user.Email, user.ID)
+	token, err2 := CreateJWT(user.Email, user.ID)
 	if err2 != nil {
 		fmt.Println("Error while creating JWT token: ", err2)
 		return c.JSON(http.StatusInternalServerError, "Unable to generate JWT token.")
@@ -63,8 +65,3 @@ func Login(c echo.Context) error {
 		"token": token,
 	})
 }
-
-// Handler function for checking expiration of current token
-// func CheckJWT(c echo.Context) error {
-
-// }
