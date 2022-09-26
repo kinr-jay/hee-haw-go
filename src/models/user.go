@@ -20,7 +20,7 @@ type User struct {
 	FirstName		string					`json:"firstName"`
 	LastName		string					`json:"lastName"`
 	Email				string					`json:"email,omitempty"`
-	Password		string					`json:"-"`
+	Password		string					`json:"password"`
 	Phone				string					`json:"phone,omitempty"`
 	Location 		*UserLocation  	`gorm:"embedded" json:"location,omitempty"`
 	Trips				[]*Trip 				`gorm:"many2many:users_trips;" json:"trips"`

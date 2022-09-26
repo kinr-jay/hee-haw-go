@@ -29,7 +29,7 @@ func CreateUser(c echo.Context) error {
 		log.Fatal(err)
 		c.JSON(http.StatusInternalServerError, "Unable to create new account.")
 	}
-	fmt.Println("user ID = ", user.ID)
+	
 	token, err2 := CreateJWT(user.Email, user.ID)
 	if err2 != nil {
 		fmt.Println("Error while creating JWT token: ", err2)

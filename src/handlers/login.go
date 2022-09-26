@@ -43,6 +43,7 @@ func Login(c echo.Context) error {
 	user := new(models.User)
 	login := new(login)
 	c.Bind(&login)
+	
 	result := database.DB.Where("email = ?", login.Email).First(&user)
 	if result.Error != nil {
 		return c.JSON(http.StatusUnauthorized, "There is no account registered under that email.")

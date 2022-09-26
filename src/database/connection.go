@@ -18,7 +18,8 @@ var err error
 
 func CreateDB() {
   //////// Load .env file if in Development environment ///////////
-	if os.Getenv("PRODUCTION") == "false" {
+	fmt.Println("env test 1", os.Getenv("PRODUCTION"))
+	if os.Getenv("PRODUCTION") != "true" {
 		if err := godotenv.Load(); err != nil {
 			log.Fatal("Error loading .env file")
 		}
