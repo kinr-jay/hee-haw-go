@@ -54,6 +54,7 @@ func FindAllUsers(c echo.Context) error {
 func FindUser(c echo.Context) error {
 	user := new(models.User)
 	userId := c.Param("userId")
+
 	result := database.DB.Preload("Trips", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id", "title")
 	}).Select("id", "first_name", "last_name", "email", "phone").First(&user, userId)
@@ -61,6 +62,7 @@ func FindUser(c echo.Context) error {
 		log.Fatal(result.Error)
 		return c.JSON(http.StatusInternalServerError, "Could not find user account.")
 	}
+
 	return c.JSON(http.StatusOK, user)
 }
 
@@ -68,29 +70,35 @@ func FindUser(c echo.Context) error {
 func UpdateUser(c echo.Context) error {
 	user := new(models.User)
 	updateId := c.Param("userId")
+
 	result := database.DB.First(&user, updateId)
 	if result.Error != nil {
 		log.Fatal(result.Error)
 		return c.JSON(http.StatusInternalServerError, "Could not find user account.")
 	}
+
 	c.Bind(&user)
+
 	result2 := database.DB.Save(&user)
 	if result2.Error != nil {
 		log.Fatal(result2.Error)
 		return c.JSON(http.StatusInternalServerError, "Account update error.")
 	}
-	return c.JSON(http.StatusOK, "Account updated successfully.")
+
+	return c.JSON(http.StatusOK, user)
 }
 
 // Delete User Account
 func DeleteUser(c echo.Context) error {
 	user := new(models.User)
 	deleteId := c.Param("userId")
+
 	result := database.DB.Where("Id = ?", deleteId).Delete(&user)
 	if result.Error != nil {
 		log.Fatal(result.Error)
 		return c.JSON(http.StatusInternalServerError, "Account delete error.")
 	}
+
 	return c.JSON(http.StatusOK, "Account deleted successfully.")
 }
 
