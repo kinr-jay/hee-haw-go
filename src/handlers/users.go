@@ -57,7 +57,7 @@ func FindUser(c echo.Context) error {
 
 	result := database.DB.Preload("Trips", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id", "title")
-	}).Select("id", "first_name", "last_name", "email", "phone").First(&user, userId)
+	}).Select("id", "first_name", "last_name", "email", "phone", "city", "state", "country").First(&user, userId)
 	if result.Error != nil {
 		log.Fatal(result.Error)
 		return c.JSON(http.StatusInternalServerError, "Could not find user account.")
