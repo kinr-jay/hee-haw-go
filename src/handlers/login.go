@@ -38,6 +38,16 @@ func CreateJWT(email string, userId uint64) (string, error) {
 	return tokenString, nil
 }
 
+// Verify Password Function
+func VerifyPassword(storedPassword string, givenPassword string) (bool) {
+	err := bcrypt.CompareHashAndPassword([]byte(storedPassword), []byte(givenPassword))
+	if err != nil {
+		return false
+	} else {
+		return true
+	}
+}
+
 // User Login Function
 func Login(c echo.Context) error {
 	user := new(models.User)

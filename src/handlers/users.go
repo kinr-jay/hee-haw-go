@@ -68,24 +68,33 @@ func FindUser(c echo.Context) error {
 
 // Update User Account
 func UpdateUser(c echo.Context) error {
-	user := new(models.User)
+	updatedUser := new(models.User)
+	databaseUser := new(models.User)
 	updateId := c.Param("userId")
 
-	result := database.DB.First(&user, updateId)
+	c.Bind(&updatedUser)
+	givenPassword := updatedUser.Password
+
+	result := database.DB.First(&databaseUser, updateId)
 	if result.Error != nil {
 		log.Fatal(result.Error)
 		return c.JSON(http.StatusInternalServerError, "Could not find user account.")
 	}
+	storedPassword := databaseUser.Password
 
-	c.Bind(&user)
+	err := bcrypt.CompareHashAndPassword([]byte(storedPassword), []byte(givenPassword))
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, 401)
+	}
+	updatedUser.Password = databaseUser.Password
 
-	result2 := database.DB.Save(&user)
+	result2 := database.DB.Save(&updatedUser)
 	if result2.Error != nil {
 		log.Fatal(result2.Error)
 		return c.JSON(http.StatusInternalServerError, "Account update error.")
 	}
+	return c.JSON(http.StatusOK, updatedUser)
 
-	return c.JSON(http.StatusOK, user)
 }
 
 // Delete User Account
