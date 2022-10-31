@@ -7,9 +7,9 @@ import (
 )
 
 type UserLocation struct {
-	City 				string			`json:"city,omitempty"`
-	State				string			`json:"state,omitempty"`
-	Country			string			`json:"country,omitempty"`
+	City 				string			`json:"city" default:""`
+	State				string			`json:"state" default:""`
+	Country			string			`json:"country" default:""`
 }
 
 type User struct {
@@ -22,6 +22,6 @@ type User struct {
 	Email				string					`json:"email,omitempty"`
 	Password		string					`json:"password"`
 	Phone				string					`json:"phone,omitempty"`
-	Location 		*UserLocation  	`gorm:"embedded" json:"location,omitempty"`
+	Location 		*UserLocation  	`gorm:"embedded" json:"location"`
 	Trips				[]*Trip 				`gorm:"many2many:users_trips;" json:"trips"`
 }

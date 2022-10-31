@@ -54,43 +54,60 @@ func FindAllUsers(c echo.Context) error {
 func FindUser(c echo.Context) error {
 	user := new(models.User)
 	userId := c.Param("userId")
+
 	result := database.DB.Preload("Trips", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id", "title")
-	}).Select("id", "first_name", "last_name", "email", "phone").First(&user, userId)
+	}).Select("id", "first_name", "last_name", "email", "phone", "city", "state", "country").First(&user, userId)
 	if result.Error != nil {
 		log.Fatal(result.Error)
 		return c.JSON(http.StatusInternalServerError, "Could not find user account.")
 	}
+
 	return c.JSON(http.StatusOK, user)
 }
 
 // Update User Account
 func UpdateUser(c echo.Context) error {
-	user := new(models.User)
+	updatedUser := new(models.User)
+	databaseUser := new(models.User)
 	updateId := c.Param("userId")
-	result := database.DB.First(&user, updateId)
+
+	c.Bind(&updatedUser)
+	givenPassword := updatedUser.Password
+
+	result := database.DB.First(&databaseUser, updateId)
 	if result.Error != nil {
 		log.Fatal(result.Error)
 		return c.JSON(http.StatusInternalServerError, "Could not find user account.")
 	}
-	c.Bind(&user)
-	result2 := database.DB.Save(&user)
+	storedPassword := databaseUser.Password
+
+	err := bcrypt.CompareHashAndPassword([]byte(storedPassword), []byte(givenPassword))
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, 401)
+	}
+	updatedUser.Password = databaseUser.Password
+
+	result2 := database.DB.Save(&updatedUser)
 	if result2.Error != nil {
 		log.Fatal(result2.Error)
 		return c.JSON(http.StatusInternalServerError, "Account update error.")
 	}
-	return c.JSON(http.StatusOK, "Account updated successfully.")
+	return c.JSON(http.StatusOK, updatedUser)
+
 }
 
 // Delete User Account
 func DeleteUser(c echo.Context) error {
 	user := new(models.User)
 	deleteId := c.Param("userId")
+
 	result := database.DB.Where("Id = ?", deleteId).Delete(&user)
 	if result.Error != nil {
 		log.Fatal(result.Error)
 		return c.JSON(http.StatusInternalServerError, "Account delete error.")
 	}
+
 	return c.JSON(http.StatusOK, "Account deleted successfully.")
 }
 
