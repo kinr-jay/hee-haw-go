@@ -146,14 +146,14 @@ func DeleteUser(c echo.Context) error {
 		})
 	}
 
-	// result := database.DB.Where("Id = ?", deleteId).Delete(&user)
-	// if result.Error != nil {
-	// 	log.Fatal(result.Error)
-	// 	return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-	// 		"status": 500,
-	// 		"message": "Account delete error.",
-	// 	})
-	// }
+	result2 := database.DB.Where("Id = ?", deleteId).Delete(&user)
+	if result2.Error != nil {
+		log.Fatal(result.Error)
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"status": 500,
+			"message": "Account delete error.",
+		})
+	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"status": 200,
