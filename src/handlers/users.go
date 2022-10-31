@@ -27,16 +27,23 @@ func CreateUser(c echo.Context) error {
 	result := database.DB.Create(&user)
 	if result.Error != nil {
 		log.Fatal(err)
-		c.JSON(http.StatusInternalServerError, "Unable to create new account.")
+		c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"status": 500,
+			"message": "Unable to create new account.",
+		})
 	}
 	
 	token, err2 := CreateJWT(user.Email, user.ID)
 	if err2 != nil {
 		fmt.Println("Error while creating JWT token: ", err2)
-		return c.JSON(http.StatusInternalServerError, "Unable to login.")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"status": 500,
+			"message": "Unable to login.",
+		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
+		"status": 200,
 		"message": "Login successful.",
 		"userId": user.ID,
 		"token": token,
@@ -60,7 +67,10 @@ func FindUser(c echo.Context) error {
 	}).Select("id", "first_name", "last_name", "email", "phone", "city", "state", "country").First(&user, userId)
 	if result.Error != nil {
 		log.Fatal(result.Error)
-		return c.JSON(http.StatusInternalServerError, "Could not find user account.")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"status": 500,
+			"message": "Could not find user account.",
+		})
 	}
 
 	return c.JSON(http.StatusOK, user)
@@ -78,7 +88,10 @@ func UpdateUser(c echo.Context) error {
 	result := database.DB.First(&databaseUser, updateId)
 	if result.Error != nil {
 		log.Fatal(result.Error)
-		return c.JSON(http.StatusInternalServerError, "Could not find user account.")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"status": 500,
+			"message": "Could not find user account.",
+		})
 	}
 	storedPassword := databaseUser.Password
 
@@ -91,9 +104,15 @@ func UpdateUser(c echo.Context) error {
 	result2 := database.DB.Save(&updatedUser)
 	if result2.Error != nil {
 		log.Fatal(result2.Error)
-		return c.JSON(http.StatusInternalServerError, "Account update error.")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"status": 500,
+			"message": "Account update error.",
+		})
 	}
-	return c.JSON(http.StatusOK, updatedUser)
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"status": 200,
+		"message": "User account updated successfully",
+	})
 
 }
 
@@ -105,10 +124,14 @@ func DeleteUser(c echo.Context) error {
 	result := database.DB.Where("Id = ?", deleteId).Delete(&user)
 	if result.Error != nil {
 		log.Fatal(result.Error)
-		return c.JSON(http.StatusInternalServerError, "Account delete error.")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"status": 500,
+			"message": "Account delete error.",
+		})
 	}
 
-	return c.JSON(http.StatusOK, "Account deleted successfully.")
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"status": 200,
+		"message": "Account deleted successfully.",
+	})
 }
-
-// Add password for existing account
