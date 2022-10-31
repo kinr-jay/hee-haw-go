@@ -83,7 +83,6 @@ func UpdateUser(c echo.Context) error {
 	updateId := c.Param("userId")
 
 	c.Bind(&updatedUser)
-	givenPassword := updatedUser.Password
 
 	result := database.DB.First(&databaseUser, updateId)
 	if result.Error != nil {
@@ -93,11 +92,13 @@ func UpdateUser(c echo.Context) error {
 			"message": "Could not find user account.",
 		})
 	}
-	storedPassword := databaseUser.Password
 
-	err := bcrypt.CompareHashAndPassword([]byte(storedPassword), []byte(givenPassword))
+	err := bcrypt.CompareHashAndPassword([]byte(databaseUser.Password), []byte(updatedUser.Password))
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, 401)
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"status": 401,
+			"message": "Incorrect password provided.",
+		})
 	}
 	updatedUser.Password = databaseUser.Password
 
@@ -116,19 +117,43 @@ func UpdateUser(c echo.Context) error {
 
 }
 
+type verifyDelete struct {
+	Password string `json:"password"`
+}
+
 // Delete User Account
 func DeleteUser(c echo.Context) error {
 	user := new(models.User)
 	deleteId := c.Param("userId")
 
-	result := database.DB.Where("Id = ?", deleteId).Delete(&user)
+	verifyDelete := new(verifyDelete)
+	c.Bind(&verifyDelete)
+
+	result := database.DB.First(&user, deleteId)
 	if result.Error != nil {
 		log.Fatal(result.Error)
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"status": 500,
-			"message": "Account delete error.",
+			"message": "Could not find user account.",
 		})
 	}
+	
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(verifyDelete.Password))
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"status": 401,
+			"message": "Incorrect password provided.",
+		})
+	}
+
+	// result := database.DB.Where("Id = ?", deleteId).Delete(&user)
+	// if result.Error != nil {
+	// 	log.Fatal(result.Error)
+	// 	return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+	// 		"status": 500,
+	// 		"message": "Account delete error.",
+	// 	})
+	// }
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"status": 200,
